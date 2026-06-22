@@ -8,7 +8,6 @@ import {
   Modal,
   RefreshControl,
   useWindowDimensions,
-  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -25,6 +24,7 @@ import { EmptyState } from '../../components/EmptyState';
 import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 import { typography, spacing, radii } from '../../lib/theme';
+import { crossAlert } from '../../lib/utils';
 
 const EVENT_COLORS: Record<EventType, string> = {
   class: '#2F5BFF',
@@ -84,13 +84,13 @@ export default function CalendarScreen() {
     const { data } = await supabase
       .from('calendar_events')
       .select('*')
-      .order('starts_at', { ascending: true });
+      .order('start_datetime', { ascending: true });
     const evts = (data as CalendarEvent[]) || [];
     setEvents(evts);
 
     const marks: Record<string, any> = {};
     evts.forEach((e) => {
-      const day = e.starts_at.split('T')[0];
+      const day = e.start_datetime.split('T')[0];
       if (!marks[day]) marks[day] = { dots: [] };
       marks[day].dots.push({ color: EVENT_COLORS[e.event_type] || colors.primary });
     });
@@ -107,7 +107,7 @@ export default function CalendarScreen() {
     setRefreshing(false);
   };
 
-  const dayEvents = events.filter((e) => e.starts_at.startsWith(selected));
+  const dayEvents = events.filter((e) => e.start_datetime.startsWith(selected));
 
   function validateTime(time: string): boolean {
     return /^\d{2}:\d{2}$/.test(time);
@@ -147,32 +147,32 @@ export default function CalendarScreen() {
     if (!valid) return;
 
     if (!user?.id) {
-      Alert.alert('Erro', 'Você precisa estar autenticado.');
+      crossAlert('Erro', 'Você precisa estar autenticado.');
       return;
     }
 
     setSaving(true);
     try {
-      const starts_at = `${newDate}T${newStartTime}:00`;
-      const ends_at = `${newDate}T${newEndTime}:00`;
+      const start_datetime = `${newDate}T${newStartTime}:00`;
+      const end_datetime = `${newDate}T${newEndTime}:00`;
 
       const { error } = await supabase.from('calendar_events').insert({
         title: newTitle.trim(),
         event_type: newType,
-        starts_at,
-        ends_at,
-        created_by: user.id,
+        start_datetime,
+        end_datetime,
+        creator_id: user.id,
       });
 
       if (error) {
-        Alert.alert('Erro ao criar evento', error.message);
+        crossAlert('Erro ao criar evento', error.message);
         return;
       }
 
       setShowModal(false);
       await fetchEvents();
     } catch (e: any) {
-      Alert.alert('Erro inesperado', e?.message ?? 'Não foi possível criar o evento.');
+      crossAlert('Erro inesperado', e?.message ?? 'Não foi possível criar o evento.');
     } finally {
       setSaving(false);
     }
@@ -269,8 +269,8 @@ export default function CalendarScreen() {
                         {evt.title}
                       </Text>
                       <Text style={[styles.eventTime, { color: colors.textSecondary }]}>
-                        {format(new Date(evt.starts_at), 'HH:mm')} –{' '}
-                        {format(new Date(evt.ends_at), 'HH:mm')}
+                        {format(new Date(evt.start_datetime), 'HH:mm')} –{' '}
+                        {format(new Date(evt.end_datetime), 'HH:mm')}
                       </Text>
                     </View>
                     <StatusChip label={EVENT_LABELS[evt.event_type]} color={evtColor} />

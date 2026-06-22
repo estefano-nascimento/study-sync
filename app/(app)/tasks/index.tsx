@@ -15,7 +15,6 @@ import { isPast, parseISO } from 'date-fns';
 import { useThemeStore } from '../../../store/themeStore';
 import { useTaskStore } from '../../../store/taskStore';
 import { Task } from '../../../lib/types';
-import { Card } from '../../../components/Card';
 import { StatusChip } from '../../../components/StatusChip';
 import { ProgressBar } from '../../../components/ProgressBar';
 import { CardSkeleton } from '../../../components/SkeletonLoader';
@@ -74,7 +73,16 @@ export default function TasksScreen() {
         onPress={() => router.push(`/(app)/tasks/${item.id}` as any)}
         accessibilityLabel={`Tarefa ${item.title}`}
       >
-        <Card style={[styles.taskCard, overdue && { borderLeftWidth: 3, borderLeftColor: colors.danger }]}>
+        <View
+          style={[
+            styles.taskCard,
+            {
+              backgroundColor: colors.surface,
+              borderColor: colors.border,
+            },
+            overdue && { borderLeftWidth: 3, borderLeftColor: colors.danger },
+          ]}
+        >
           <View style={styles.taskHeader}>
             <View style={{ flex: 1 }}>
               <Text
@@ -137,7 +145,7 @@ export default function TasksScreen() {
           )}
 
           {progress > 0 && <ProgressBar value={progress} showLabel />}
-        </Card>
+        </View>
       </TouchableOpacity>
     );
   };
@@ -157,40 +165,42 @@ export default function TasksScreen() {
       </View>
 
       {/* Filtros de status */}
-      <FlatList
-        horizontal
-        data={STATUS_FILTERS}
-        keyExtractor={(f) => f}
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.filters}
-        renderItem={({ item }) => {
-          const active = filter === item;
-          return (
-            <TouchableOpacity
-              onPress={() => setFilter(item)}
-              style={[
-                styles.filterChip,
-                {
-                  backgroundColor: active ? colors.primary : colors.surface,
-                  borderColor: active ? colors.primary : colors.border,
-                },
-              ]}
-              accessibilityLabel={`Filtrar por ${item}`}
-              accessibilityState={{ selected: active }}
-            >
-              <Text
-                style={{
-                  color: active ? '#fff' : colors.textSecondary,
-                  fontWeight: '600',
-                  fontSize: 13,
-                }}
+      <View style={styles.filtersRow}>
+        <FlatList
+          horizontal
+          data={STATUS_FILTERS}
+          keyExtractor={(f) => f}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.filters}
+          renderItem={({ item }) => {
+            const active = filter === item;
+            return (
+              <TouchableOpacity
+                onPress={() => setFilter(item)}
+                style={[
+                  styles.filterChip,
+                  {
+                    backgroundColor: active ? colors.primary : colors.surface,
+                    borderColor: active ? colors.primary : colors.border,
+                  },
+                ]}
+                accessibilityLabel={`Filtrar por ${item}`}
+                accessibilityState={{ selected: active }}
               >
-                {item}
-              </Text>
-            </TouchableOpacity>
-          );
-        }}
-      />
+                <Text
+                  style={{
+                    color: active ? '#fff' : colors.textSecondary,
+                    fontWeight: '600',
+                    fontSize: 13,
+                  }}
+                >
+                  {item}
+                </Text>
+              </TouchableOpacity>
+            );
+          }}
+        />
+      </View>
 
       {/* Lista de tarefas */}
       {loading ? (
@@ -248,7 +258,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  filters: { paddingHorizontal: spacing.md, paddingVertical: spacing.sm, gap: spacing.xs },
+  filtersRow: { flexShrink: 0 },
+  filters: { paddingHorizontal: spacing.md, paddingVertical: spacing.sm, gap: spacing.xs, alignItems: 'center' },
   filterChip: {
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs + 2,
@@ -257,7 +268,14 @@ const styles = StyleSheet.create({
   },
   list: { padding: spacing.md, gap: spacing.sm },
   listWide: { maxWidth: 800, alignSelf: 'center', width: '100%' },
-  taskCard: { gap: spacing.xs },
+  taskCard: {
+    gap: spacing.sm,
+    minHeight: 140,
+    borderRadius: 0,
+    borderWidth: 1,
+    padding: spacing.md,
+    overflow: 'hidden',
+  },
   taskHeader: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm },
   taskTitle: { ...typography.body, fontWeight: '600' },
   overdueRow: { flexDirection: 'row', alignItems: 'center', gap: 3, marginTop: 2 },

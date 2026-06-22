@@ -11,7 +11,6 @@ type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
 const NAV_ITEMS: { label: string; icon: IoniconsName; activeIcon: IoniconsName; href: string }[] = [
   { label: 'Início',        icon: 'home-outline',      activeIcon: 'home',        href: '/(app)/dashboard' },
   { label: 'Tarefas',       icon: 'clipboard-outline', activeIcon: 'clipboard',   href: '/(app)/tasks' },
-  { label: 'Grupos',        icon: 'people-outline',    activeIcon: 'people',      href: '/(app)/groups' },
   { label: 'Agenda',        icon: 'calendar-outline',  activeIcon: 'calendar',    href: '/(app)/calendar' },
   { label: 'Configurações', icon: 'settings-outline',  activeIcon: 'settings',    href: '/(app)/settings' },
 ];

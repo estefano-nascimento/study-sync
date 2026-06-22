@@ -6,12 +6,27 @@ import {
   ScrollView,
   TouchableOpacity,
   useWindowDimensions,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Svg, { Path, G, Text as SvgText } from 'react-native-svg';
-import { VictoryLine, VictoryBar, VictoryChart, VictoryAxis } from 'victory-native';
+
+let VictoryLine: any = () => null;
+let VictoryBar: any = () => null;
+let VictoryChart: any = ({ children }: any) => children;
+let VictoryAxis: any = () => null;
+
+if (Platform.OS !== 'web') {
+  try {
+    const victory = require('victory-native');
+    VictoryLine = victory.VictoryLine;
+    VictoryBar = victory.VictoryBar;
+    VictoryChart = victory.VictoryChart;
+    VictoryAxis = victory.VictoryAxis;
+  } catch {}
+}
 import { subDays, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { supabase } from '../../../../lib/supabase';

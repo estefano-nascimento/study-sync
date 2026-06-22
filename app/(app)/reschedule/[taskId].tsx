@@ -5,7 +5,6 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -19,6 +18,7 @@ import { Task } from '../../../lib/types';
 import { Card } from '../../../components/Card';
 import { Button } from '../../../components/Button';
 import { typography, spacing } from '../../../lib/theme';
+import { crossAlert } from '../../../lib/utils';
 
 interface TimeSlot {
   date: Date;
@@ -61,7 +61,7 @@ export default function RescheduleScreen() {
 
   async function handleApprove() {
     if (!selectedSlot || !task) {
-      Alert.alert('Selecione um horário', 'Escolha uma janela de tempo antes de aprovar.');
+      crossAlert('Selecione um horário', 'Escolha uma janela de tempo antes de aprovar.');
       return;
     }
     setSaving(true);
@@ -79,7 +79,7 @@ export default function RescheduleScreen() {
       supabase.from('tasks').update({ due_date: newDueDate }).eq('id', taskId),
     ]);
     setSaving(false);
-    Alert.alert('Reagendado', 'A tarefa foi reagendada com sucesso.', [
+    crossAlert('Reagendado', 'A tarefa foi reagendada com sucesso.', [
       { text: 'OK', onPress: () => router.back() },
     ]);
   }

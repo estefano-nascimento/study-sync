@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  FlatList,
   TouchableOpacity,
   RefreshControl,
   useWindowDimensions,
@@ -19,7 +18,7 @@ import { useAuthStore } from '../../store/authStore';
 import { useThemeStore } from '../../store/themeStore';
 import { useTaskStore } from '../../store/taskStore';
 import { useNotificationStore } from '../../store/notificationStore';
-import { Task, Group } from '../../lib/types';
+import { Task } from '../../lib/types';
 import { Card } from '../../components/Card';
 import { KpiCard } from '../../components/KpiCard';
 import { StatusChip } from '../../components/StatusChip';
@@ -34,11 +33,6 @@ interface WeeklyData {
   total: number;
 }
 
-interface GroupWithProgress extends Group {
-  progress: number;
-  memberCount: number;
-}
-
 export default function DashboardScreen() {
   const { colors } = useThemeStore();
   const { profile } = useAuthStore();
@@ -51,7 +45,6 @@ export default function DashboardScreen() {
   const [criticalTask, setCriticalTask] = useState<Task | null>(null);
   const [kpis, setKpis] = useState({ today: 0, critical: 0, focusToday: 0, attention: 0 });
   const [weeklyData, setWeeklyData] = useState<WeeklyData[]>([]);
-  const [groups, setGroups] = useState<GroupWithProgress[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -62,7 +55,6 @@ export default function DashboardScreen() {
       fetchCriticalTask(),
       fetchKpis(),
       fetchWeeklyFocus(),
-      fetchGroups(),
     ]);
     setLoading(false);
   }, []);
@@ -145,47 +137,6 @@ export default function DashboardScreen() {
     );
   }
 
-  async function fetchGroups() {
-    const { data: memberData } = await supabase
-      .from('group_members')
-      .select('group_id, groups(id, name, cover_image)')
-      .limit(10);
-    if (!memberData) return;
-
-    const validGroups = (memberData as any[])
-      .filter((m) => m.groups)
-      .map((m) => m.groups);
-
-    if (validGroups.length === 0) return;
-
-    // Buscar tarefas de todos os grupos de uma vez
-    const groupIds = validGroups.map((g: { id: string }) => g.id);
-    const { data: taskData } = await supabase
-      .from('tasks')
-      .select('status, group_id')
-      .in('group_id', groupIds);
-
-    // Calcular progresso real por grupo
-    const progressByGroup: Record<string, { total: number; done: number }> = {};
-    (taskData || []).forEach((t) => {
-      if (!progressByGroup[t.group_id]) {
-        progressByGroup[t.group_id] = { total: 0, done: 0 };
-      }
-      progressByGroup[t.group_id].total++;
-      if (t.status === 'done') progressByGroup[t.group_id].done++;
-    });
-
-    const groupList: GroupWithProgress[] = validGroups.map((g: { id: string; name: string }) => {
-      const stats = progressByGroup[g.id] || { total: 0, done: 0 };
-      return {
-        ...g,
-        progress: stats.total > 0 ? Math.round((stats.done / stats.total) * 100) : 0,
-        memberCount: 3,
-      };
-    });
-    setGroups(groupList);
-  }
-
   useEffect(() => { fetchData(); }, []);
 
   const onRefresh = async () => {
@@ -254,7 +205,7 @@ export default function DashboardScreen() {
             <KpiCard title="Para hoje" value={kpis.today} icon="today-outline" color={colors.primary} />
             <KpiCard title="Críticas" value={kpis.critical} icon="warning-outline" color={colors.danger} />
             <KpiCard title="Foco hoje" value={focusLabel} icon="time-outline" color={colors.success} />
-            <KpiCard title="Alta prioridade" value={kpis.attention} icon="alert-circle-outline" color={colors.warning} />
+            <KpiCard title="Atenção" value={kpis.attention} icon="alert-circle-outline" color={colors.warning} />
           </View>
         )}
 
@@ -333,48 +284,6 @@ export default function DashboardScreen() {
           ))
         )}
 
-        {/* Grupos ativos */}
-        {groups.length > 0 && (
-          <>
-            <View style={[styles.sectionHeader, { marginTop: spacing.sm }]}>
-              <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Grupos ativos</Text>
-              <TouchableOpacity onPress={() => router.push('/(app)/groups')} accessibilityLabel="Ver todos os grupos">
-                <Text style={[styles.seeAll, { color: colors.primary }]}>Ver todos</Text>
-              </TouchableOpacity>
-            </View>
-            <FlatList
-              horizontal
-              data={groups}
-              keyExtractor={(g) => g.id}
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ gap: spacing.sm, paddingBottom: spacing.md }}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  onPress={() => router.push(`/(app)/groups/${item.id}` as any)}
-                  accessibilityLabel={`Grupo ${item.name}`}
-                >
-                  <Card style={styles.groupCard}>
-                    <View style={[styles.groupAvatar, { backgroundColor: colors.primary + '22' }]}>
-                      <Ionicons name="people" size={28} color={colors.primary} />
-                    </View>
-                    <Text
-                      style={[styles.groupName, { color: colors.textPrimary }]}
-                      numberOfLines={1}
-                    >
-                      {item.name}
-                    </Text>
-                    <ProgressBar value={item.progress} showLabel />
-                    {item.progress === 0 && (
-                      <Text style={[{ color: colors.textSecondary, fontSize: 11 }]}>
-                        Sem tarefas concluídas
-                      </Text>
-                    )}
-                  </Card>
-                </TouchableOpacity>
-              )}
-            />
-          </>
-        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -494,13 +403,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  groupCard: { width: 180, gap: spacing.xs },
-  groupAvatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  groupName: { ...typography.body, fontWeight: '600' },
 });

@@ -17,6 +17,7 @@ const HIDDEN: string[] = [
   'profile',
   'focus',
   'reschedule',
+  'groups',
 ];
 
 export default function AppLayout() {
@@ -79,7 +80,6 @@ export default function AppLayout() {
           <Tabs screenOptions={{ headerShown: false, tabBarStyle: { display: 'none' } }}>
             <Tabs.Screen name="dashboard" />
             <Tabs.Screen name="tasks" />
-            <Tabs.Screen name="groups" />
             <Tabs.Screen name="calendar" />
             <Tabs.Screen name="settings" />
             {HIDDEN.map((name) => (
@@ -108,15 +108,6 @@ export default function AppLayout() {
           title: 'Tarefas',
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons name={focused ? 'clipboard' : 'clipboard-outline'} size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="groups"
-        options={{
-          title: 'Grupos',
-          tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons name={focused ? 'people' : 'people-outline'} size={size} color={color} />
           ),
         }}
       />

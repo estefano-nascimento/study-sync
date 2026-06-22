@@ -5,7 +5,6 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Alert,
   Modal,
   Platform,
 } from 'react-native';
@@ -23,6 +22,7 @@ import { Subject, Group } from '../../../lib/types';
 import { Input } from '../../../components/Input';
 import { Button } from '../../../components/Button';
 import { typography, spacing, radii } from '../../../lib/theme';
+import { crossAlert } from '../../../lib/utils';
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
 
@@ -75,16 +75,16 @@ export default function NewTaskScreen() {
 
   async function handleSave() {
     if (!title.trim()) {
-      Alert.alert('Campo obrigatório', 'Informe o título da tarefa.');
+      crossAlert('Campo obrigatório', 'Informe o título da tarefa.');
       return;
     }
     if (!user?.id) {
-      Alert.alert('Erro de autenticação', 'Você precisa estar logado para criar tarefas.');
+      crossAlert('Erro de autenticação', 'Você precisa estar logado para criar tarefas.');
       return;
     }
     const estNum = estimatedMin ? parseInt(estimatedMin, 10) : null;
     if (estimatedMin && (isNaN(estNum!) || estNum! <= 0)) {
-      Alert.alert('Estimativa inválida', 'Informe um número inteiro positivo de minutos.');
+      crossAlert('Estimativa inválida', 'Informe um número inteiro positivo de minutos.');
       return;
     }
 
@@ -101,24 +101,24 @@ export default function NewTaskScreen() {
           estimated_minutes: estNum,
           subject_id: selectedSubject,
           group_id: selectedGroup,
-          created_by: user.id,
+          creator_id: user.id,
         })
         .select()
         .single();
 
       if (error) {
-        Alert.alert('Erro ao criar tarefa', error.message);
+        crossAlert('Erro ao criar tarefa', error.message);
         return;
       }
 
       if (data) {
-        supabase.rpc('calculate_criticality', { task_id: data.id }).catch(() => {});
+        try { await supabase.rpc('calculate_criticality', { task_id: data.id }); } catch {}
       }
 
       await fetchTasks();
       router.back();
     } catch (e: any) {
-      Alert.alert('Erro inesperado', e?.message ?? 'Não foi possível criar a tarefa.');
+      crossAlert('Erro inesperado', e?.message ?? 'Não foi possível criar a tarefa.');
     } finally {
       setSaving(false);
     }

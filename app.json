@@ -39,6 +39,14 @@
         "backgroundColor": "#2F5BFF"
       },
       "package": "com.studysync.app"
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "357e2210-f981-40d2-b666-913a535f9acb"
+      }
     }
   }
 }

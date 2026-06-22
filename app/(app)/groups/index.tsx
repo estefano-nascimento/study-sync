@@ -9,7 +9,6 @@ import {
   useWindowDimensions,
   Modal,
   TextInput,
-  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -25,6 +24,7 @@ import { EmptyState } from '../../../components/EmptyState';
 import { CardSkeleton } from '../../../components/SkeletonLoader';
 import { Button } from '../../../components/Button';
 import { typography, spacing } from '../../../lib/theme';
+import { crossAlert } from '../../../lib/utils';
 
 interface GroupWithMeta extends Group {
   memberCount: number;
@@ -87,7 +87,7 @@ export default function GroupsScreen() {
       .single();
 
     if (!invite) {
-      Alert.alert('Código inválido', 'Verifique o código e tente novamente.');
+      crossAlert('Código inválido', 'Verifique o código e tente novamente.');
       setJoining(false);
       return;
     }
@@ -100,7 +100,7 @@ export default function GroupsScreen() {
     setJoining(false);
     setShowJoinModal(false);
     if (!error) { fetchGroups(); }
-    else Alert.alert('Erro', error.message);
+    else crossAlert('Erro', error.message);
   }
 
   const healthColor = (h: GroupWithMeta['health']) =>

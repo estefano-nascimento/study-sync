@@ -68,7 +68,7 @@ export interface Task {
   subject_id: string | null;
   group_id: string | null;
   parent_task_id: string | null;
-  created_by: string;
+  creator_id: string;
   created_at: string;
   subjects?: Subject;
   groups?: Group;
@@ -122,10 +122,10 @@ export interface CalendarEvent {
   title: string;
   description: string | null;
   event_type: EventType;
-  starts_at: string;
-  ends_at: string;
+  start_datetime: string;
+  end_datetime: string;
   group_id: string | null;
-  created_by: string;
+  creator_id: string;
   color: string | null;
 }
 

@@ -1,5 +1,6 @@
 import { format, formatDistanceToNow, isToday, isTomorrow, isPast } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { Alert, Platform } from 'react-native';
 import { TaskPriority, TaskStatus } from './types';
 
 export function formatDate(date: string | Date): string {
@@ -62,4 +63,25 @@ export function timerFormat(seconds: number): string {
   const m = Math.floor(seconds / 60).toString().padStart(2, '0');
   const s = (seconds % 60).toString().padStart(2, '0');
   return `${m}:${s}`;
+}
+
+export function crossAlert(
+  title: string,
+  message?: string,
+  buttons?: { text: string; style?: 'cancel' | 'destructive' | 'default'; onPress?: () => void }[],
+) {
+  if (Platform.OS === 'web') {
+    if (buttons && buttons.length > 1) {
+      const confirmed = window.confirm(`${title}\n\n${message || ''}`);
+      if (confirmed) {
+        const action = buttons.find((b) => b.style !== 'cancel');
+        action?.onPress?.();
+      }
+    } else {
+      window.alert(`${title}${message ? `\n\n${message}` : ''}`);
+      buttons?.[0]?.onPress?.();
+    }
+  } else {
+    Alert.alert(title, message, buttons);
+  }
 }

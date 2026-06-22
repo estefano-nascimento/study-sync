@@ -5,7 +5,6 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,6 +15,7 @@ import { useThemeStore } from '../../../store/themeStore';
 import { Input } from '../../../components/Input';
 import { Button } from '../../../components/Button';
 import { typography, spacing } from '../../../lib/theme';
+import { crossAlert } from '../../../lib/utils';
 
 export default function NewGroupScreen() {
   const { colors } = useThemeStore();
@@ -28,7 +28,7 @@ export default function NewGroupScreen() {
 
   async function handleCreate() {
     if (!name.trim()) {
-      Alert.alert('Atenção', 'Nome do grupo é obrigatório');
+      crossAlert('Atenção', 'Nome do grupo é obrigatório');
       return;
     }
     setSaving(true);
@@ -40,7 +40,7 @@ export default function NewGroupScreen() {
 
     if (error) {
       setSaving(false);
-      Alert.alert('Erro', error.message);
+      crossAlert('Erro', error.message);
       return;
     }
 

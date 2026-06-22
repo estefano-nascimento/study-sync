@@ -6,7 +6,6 @@ import {
   ScrollView,
   TouchableOpacity,
   Switch,
-  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -17,7 +16,7 @@ import { useThemeStore } from '../../store/themeStore';
 import { useNotificationStore } from '../../store/notificationStore';
 import { Card } from '../../components/Card';
 import { typography, spacing, radii } from '../../lib/theme';
-import { formatMinutes } from '../../lib/utils';
+import { formatMinutes, crossAlert } from '../../lib/utils';
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
 
@@ -50,7 +49,7 @@ export default function SettingsScreen() {
   }
 
   async function handleSignOut() {
-    Alert.alert('Sair da conta', 'Deseja realmente sair?', [
+    crossAlert('Sair da conta', 'Deseja realmente sair?', [
       { text: 'Cancelar', style: 'cancel' },
       {
         text: 'Sair',

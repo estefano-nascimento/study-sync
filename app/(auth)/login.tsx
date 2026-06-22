@@ -16,13 +16,7 @@ import { useThemeStore } from '../../store/themeStore';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { typography, spacing, radii } from '../../lib/theme';
-
-function getRedirectUrl(): string {
-  if (Platform.OS === 'web' && typeof window !== 'undefined') {
-    return `${window.location.origin}/callback`;
-  }
-  return 'studysync://callback';
-}
+import { validateEmail } from '../../lib/validation';
 
 export default function LoginScreen() {
   const { colors } = useThemeStore();
@@ -35,15 +29,42 @@ export default function LoginScreen() {
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const [apiError, setApiError] = useState('');
   const [needsConfirmation, setNeedsConfirmation] = useState(false);
+  const [emailSuggestion, setEmailSuggestion] = useState('');
 
   function validate() {
     const e: typeof errors = {};
-    if (!email.trim()) e.email = 'E-mail obrigatório';
-    else if (!/\S+@\S+\.\S+/.test(email)) e.email = 'E-mail inválido';
+
+    const emailResult = validateEmail(email);
+    if (!emailResult.valid && emailResult.error) {
+      e.email = emailResult.error;
+    }
+
     if (!password) e.password = 'Senha obrigatória';
     else if (password.length < 6) e.password = 'Mínimo 6 caracteres';
     setErrors(e);
     return Object.keys(e).length === 0;
+  }
+
+  function handleEmailChange(value: string) {
+    setEmail(value);
+    setApiError('');
+    setNeedsConfirmation(false);
+    setEmailSuggestion('');
+
+    if (value.includes('@') && value.length > 5) {
+      const result = validateEmail(value);
+      if (result.suggestion) {
+        setEmailSuggestion(result.suggestion);
+      }
+    }
+  }
+
+  function applySuggestion() {
+    const match = emailSuggestion.match(/Você quis dizer (.+)\?/);
+    if (match) {
+      setEmail(match[1]);
+      setEmailSuggestion('');
+    }
   }
 
   async function handleLogin() {
@@ -59,9 +80,8 @@ export default function LoginScreen() {
 
     setLoading(false);
 
-    if (!error) return; // onAuthStateChange in _layout.tsx handles redirect
+    if (!error) return;
 
-    // Supabase returns this message when email isn't confirmed yet
     if (
       error.message.toLowerCase().includes('email not confirmed') ||
       error.message.toLowerCase().includes('email confirmation')
@@ -84,11 +104,17 @@ export default function LoginScreen() {
     await supabase.auth.resend({
       type: 'signup',
       email: email.trim().toLowerCase(),
-      options: { emailRedirectTo: getRedirectUrl() },
     });
     setResending(false);
-    setApiError('E-mail de confirmação reenviado. Verifique sua caixa de entrada.');
+    setApiError('Novo código enviado! Verifique sua caixa de entrada.');
     setNeedsConfirmation(false);
+  }
+
+  function goToVerify() {
+    router.push({
+      pathname: '/(auth)/verify' as any,
+      params: { email: email.trim().toLowerCase() },
+    });
   }
 
   return (
@@ -104,27 +130,36 @@ export default function LoginScreen() {
           </View>
 
           <View style={styles.form}>
-            <Input
-              label="E-mail"
-              value={email}
-              onChangeText={(v) => { setEmail(v); setApiError(''); setNeedsConfirmation(false); }}
-              placeholder="seu@email.com"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoComplete="email"
-              error={errors.email}
-            />
+            <View>
+              <Input
+                label="E-mail"
+                value={email}
+                onChangeText={handleEmailChange}
+                placeholder="seu@email.com"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoComplete="email"
+                error={errors.email}
+              />
+              {emailSuggestion ? (
+                <TouchableOpacity onPress={applySuggestion} style={styles.suggestionRow}>
+                  <Ionicons name="bulb-outline" size={14} color={colors.warning} />
+                  <Text style={[styles.suggestionText, { color: colors.warning }]}>
+                    {emailSuggestion}
+                  </Text>
+                </TouchableOpacity>
+              ) : null}
+            </View>
             <Input
               label="Senha"
               value={password}
               onChangeText={(v) => { setPassword(v); setApiError(''); }}
-              placeholder="••••••••"
+              placeholder="Sua senha"
               secureTextEntry
               autoComplete="password"
               error={errors.password}
             />
 
-            {/* API error / info banner */}
             {apiError ? (
               <View
                 style={[
@@ -132,12 +167,12 @@ export default function LoginScreen() {
                   {
                     backgroundColor: needsConfirmation
                       ? colors.warning + '1A'
-                      : apiError.includes('reenviado')
+                      : apiError.includes('código enviado')
                       ? colors.success + '1A'
                       : colors.danger + '1A',
                     borderColor: needsConfirmation
                       ? colors.warning
-                      : apiError.includes('reenviado')
+                      : apiError.includes('código enviado')
                       ? colors.success
                       : colors.danger,
                   },
@@ -145,7 +180,7 @@ export default function LoginScreen() {
               >
                 <Ionicons
                   name={
-                    apiError.includes('reenviado')
+                    apiError.includes('código enviado')
                       ? 'checkmark-circle-outline'
                       : 'alert-circle-outline'
                   }
@@ -153,7 +188,7 @@ export default function LoginScreen() {
                   color={
                     needsConfirmation
                       ? colors.warning
-                      : apiError.includes('reenviado')
+                      : apiError.includes('código enviado')
                       ? colors.success
                       : colors.danger
                   }
@@ -164,7 +199,7 @@ export default function LoginScreen() {
                     {
                       color: needsConfirmation
                         ? colors.warning
-                        : apiError.includes('reenviado')
+                        : apiError.includes('código enviado')
                         ? colors.success
                         : colors.danger,
                     },
@@ -177,18 +212,28 @@ export default function LoginScreen() {
 
             <Button label="Entrar" onPress={handleLogin} loading={loading} />
 
-            {/* Resend confirmation CTA */}
             {needsConfirmation && (
-              <TouchableOpacity
-                onPress={handleResendConfirmation}
-                disabled={resending}
-                style={[styles.resendBtn, { borderColor: colors.warning }]}
-              >
-                <Ionicons name="mail-outline" size={16} color={colors.warning} />
-                <Text style={[styles.resendText, { color: colors.warning }]}>
-                  {resending ? 'Reenviando...' : 'Reenviar e-mail de confirmação'}
-                </Text>
-              </TouchableOpacity>
+              <View style={styles.confirmActions}>
+                <TouchableOpacity
+                  onPress={goToVerify}
+                  style={[styles.resendBtn, { borderColor: colors.primary, backgroundColor: colors.primary + '0D' }]}
+                >
+                  <Ionicons name="keypad-outline" size={16} color={colors.primary} />
+                  <Text style={[styles.resendText, { color: colors.primary }]}>
+                    Digitar código de verificação
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleResendConfirmation}
+                  disabled={resending}
+                  style={[styles.resendBtn, { borderColor: colors.warning }]}
+                >
+                  <Ionicons name="mail-outline" size={16} color={colors.warning} />
+                  <Text style={[styles.resendText, { color: colors.warning }]}>
+                    {resending ? 'Reenviando...' : 'Reenviar código'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
             )}
           </View>
 
@@ -214,6 +259,13 @@ const styles = StyleSheet.create({
   title: { ...typography.h1, textAlign: 'center' },
   subtitle: { ...typography.body, textAlign: 'center' },
   form: { gap: spacing.md },
+  suggestionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    marginTop: spacing.xs,
+  },
+  suggestionText: { fontSize: 13, fontWeight: '500' },
   errorBox: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -223,6 +275,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   errorText: { ...typography.caption, flex: 1, lineHeight: 18 },
+  confirmActions: { gap: spacing.xs },
   resendBtn: {
     flexDirection: 'row',
     alignItems: 'center',

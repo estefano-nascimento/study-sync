@@ -5,7 +5,6 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Alert,
   Switch,
   RefreshControl,
 } from 'react-native';
@@ -21,7 +20,7 @@ import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
 import { CardSkeleton } from '../../components/SkeletonLoader';
 import { typography, spacing, radii } from '../../lib/theme';
-import { formatMinutes } from '../../lib/utils';
+import { formatMinutes, crossAlert } from '../../lib/utils';
 
 const POMODORO_OPTIONS = [15, 25, 45, 60];
 const GOAL_OPTIONS = [30, 60, 120, 180, 240, 360];
@@ -86,7 +85,7 @@ export default function ProfileScreen() {
   };
 
   async function handleSignOut() {
-    Alert.alert('Sair da conta', 'Deseja realmente sair?', [
+    crossAlert('Sair da conta', 'Deseja realmente sair?', [
       { text: 'Cancelar', style: 'cancel' },
       {
         text: 'Sair',

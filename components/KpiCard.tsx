@@ -22,8 +22,8 @@ export function KpiCard({ title, value, icon, color, subtitle }: Props) {
       <View style={[styles.iconWrap, { backgroundColor: iconColor + '1A' }]}>
         <Ionicons name={icon} size={22} color={iconColor} />
       </View>
-      <Text style={[styles.value, { color: colors.textPrimary }]}>{value}</Text>
-      <Text style={[styles.title, { color: colors.textSecondary }]}>{title}</Text>
+      <Text style={[styles.value, { color: colors.textPrimary }]} numberOfLines={1} adjustsFontSizeToFit>{value}</Text>
+      <Text style={[styles.title, { color: colors.textSecondary }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>{title}</Text>
       {subtitle && (
         <Text style={[styles.subtitle, { color: colors.textSecondary }]}>{subtitle}</Text>
       )}
@@ -32,7 +32,7 @@ export function KpiCard({ title, value, icon, color, subtitle }: Props) {
 }
 
 const styles = StyleSheet.create({
-  card: { flex: 1, gap: spacing.xs },
+  card: { flex: 1, minWidth: 0, gap: spacing.xs },
   iconWrap: {
     width: 40,
     height: 40,

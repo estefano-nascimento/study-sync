@@ -16,41 +16,58 @@ import { useThemeStore } from '../../store/themeStore';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { typography, spacing, radii } from '../../lib/theme';
-
-// Returns the redirect URL for email confirmation.
-// On web: current origin + /callback  (must be whitelisted in Supabase dashboard)
-// On mobile: Expo Go / bare doesn't receive email links, so we skip confirmation.
-function getRedirectUrl(): string {
-  if (Platform.OS === 'web' && typeof window !== 'undefined') {
-    return `${window.location.origin}/callback`;
-  }
-  return 'studysync://callback';
-}
-
-type Stage = 'form' | 'check-email';
+import { validateEmail, validatePassword, strengthColor } from '../../lib/validation';
 
 export default function SignupScreen() {
   const { colors } = useThemeStore();
   const router = useRouter();
 
-  const [stage, setStage] = useState<Stage>('form');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [resending, setResending] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [apiError, setApiError] = useState('');
+  const [emailSuggestion, setEmailSuggestion] = useState('');
+
+  const passwordValidation = validatePassword(password);
 
   function validate() {
     const e: Record<string, string> = {};
     if (!name.trim()) e.name = 'Nome obrigatório';
-    if (!email.trim()) e.email = 'E-mail obrigatório';
-    else if (!/\S+@\S+\.\S+/.test(email)) e.email = 'E-mail inválido';
-    if (!password) e.password = 'Senha obrigatória';
-    else if (password.length < 6) e.password = 'Mínimo 6 caracteres';
+
+    const emailResult = validateEmail(email);
+    if (!emailResult.valid && emailResult.error) {
+      e.email = emailResult.error;
+    }
+
+    if (!passwordValidation.valid) {
+      e.password = 'A senha não atende todos os requisitos';
+    }
+
     setErrors(e);
     return Object.keys(e).length === 0;
+  }
+
+  function handleEmailChange(value: string) {
+    setEmail(value);
+    setApiError('');
+    setEmailSuggestion('');
+
+    if (value.includes('@') && value.length > 5) {
+      const result = validateEmail(value);
+      if (result.suggestion) {
+        setEmailSuggestion(result.suggestion);
+      }
+    }
+  }
+
+  function applySuggestion() {
+    const match = emailSuggestion.match(/Você quis dizer (.+)\?/);
+    if (match) {
+      setEmail(match[1]);
+      setEmailSuggestion('');
+    }
   }
 
   async function handleSignup() {
@@ -63,97 +80,30 @@ export default function SignupScreen() {
       password,
       options: {
         data: { full_name: name.trim() },
-        emailRedirectTo: getRedirectUrl(),
       },
     });
 
     setLoading(false);
 
     if (error) {
-      setApiError(error.message);
+      if (error.message.toLowerCase().includes('already registered')) {
+        setApiError('Este e-mail já está cadastrado. Tente fazer login.');
+      } else {
+        setApiError(error.message);
+      }
       return;
     }
 
     if (data.session) {
-      // Email confirmation is DISABLED in Supabase — user is already logged in.
       router.replace('/(auth)/onboarding');
     } else {
-      // Email confirmation is ENABLED — show the "check your inbox" screen.
-      setStage('check-email');
+      router.push({
+        pathname: '/(auth)/verify' as any,
+        params: { email: email.trim().toLowerCase() },
+      });
     }
   }
 
-  async function handleResend() {
-    setResending(true);
-    await supabase.auth.resend({
-      type: 'signup',
-      email: email.trim().toLowerCase(),
-      options: { emailRedirectTo: getRedirectUrl() },
-    });
-    setResending(false);
-  }
-
-  // ── Check-email stage ──────────────────────────────────────────────────────
-  if (stage === 'check-email') {
-    return (
-      <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
-        <View style={styles.confirmContainer}>
-          <View style={[styles.iconCircle, { backgroundColor: colors.primary + '1A' }]}>
-            <Ionicons name="mail-outline" size={56} color={colors.primary} />
-          </View>
-
-          <Text style={[styles.confirmTitle, { color: colors.textPrimary }]}>
-            Confirme seu e-mail
-          </Text>
-          <Text style={[styles.confirmBody, { color: colors.textSecondary }]}>
-            Enviamos um link de confirmação para{'\n'}
-            <Text style={{ color: colors.primary, fontWeight: '600' }}>{email}</Text>
-            {'\n\n'}Clique no link para ativar sua conta e volte para fazer login.
-          </Text>
-
-          {/* Steps */}
-          <View style={[styles.stepsCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-            {[
-              'Abra o e-mail de confirmação',
-              'Clique em "Confirmar e-mail"',
-              'Volte aqui e faça login',
-            ].map((step, i) => (
-              <View key={i} style={styles.stepRow}>
-                <View style={[styles.stepNum, { backgroundColor: colors.primary }]}>
-                  <Text style={styles.stepNumText}>{i + 1}</Text>
-                </View>
-                <Text style={[styles.stepText, { color: colors.textPrimary }]}>{step}</Text>
-              </View>
-            ))}
-          </View>
-
-          <Button
-            label="Ir para o login"
-            onPress={() => router.replace('/(auth)/login')}
-            style={{ width: '100%' }}
-          />
-
-          <TouchableOpacity onPress={handleResend} disabled={resending}>
-            <Text style={[styles.resend, { color: colors.textSecondary }]}>
-              Não recebeu?{' '}
-              <Text style={{ color: colors.primary, fontWeight: '600' }}>
-                {resending ? 'Enviando...' : 'Reenviar e-mail'}
-              </Text>
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => setStage('form')}>
-            <Text style={[styles.resend, { color: colors.textSecondary }]}>
-              E-mail errado?{' '}
-              <Text style={{ color: colors.primary, fontWeight: '600' }}>Corrigir</Text>
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    );
-  }
-
-  // ── Signup form ────────────────────────────────────────────────────────────
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
@@ -176,24 +126,73 @@ export default function SignupScreen() {
               autoComplete="name"
               error={errors.name}
             />
-            <Input
-              label="E-mail"
-              value={email}
-              onChangeText={(v) => { setEmail(v); setApiError(''); }}
-              placeholder="seu@email.com"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoComplete="email"
-              error={errors.email}
-            />
-            <Input
-              label="Senha"
-              value={password}
-              onChangeText={(v) => { setPassword(v); setApiError(''); }}
-              placeholder="Mínimo 6 caracteres"
-              secureTextEntry
-              error={errors.password}
-            />
+            <View>
+              <Input
+                label="E-mail"
+                value={email}
+                onChangeText={handleEmailChange}
+                placeholder="seu@email.com"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoComplete="email"
+                error={errors.email}
+              />
+              {emailSuggestion ? (
+                <TouchableOpacity onPress={applySuggestion} style={styles.suggestionRow}>
+                  <Ionicons name="bulb-outline" size={14} color={colors.warning} />
+                  <Text style={[styles.suggestionText, { color: colors.warning }]}>
+                    {emailSuggestion}
+                  </Text>
+                </TouchableOpacity>
+              ) : null}
+            </View>
+            <View>
+              <Input
+                label="Senha"
+                value={password}
+                onChangeText={(v) => { setPassword(v); setApiError(''); }}
+                placeholder="Mínimo 8 caracteres"
+                secureTextEntry
+                error={errors.password}
+              />
+              {password.length > 0 && (
+                <View style={styles.strengthSection}>
+                  <View style={styles.strengthBarBg}>
+                    <View
+                      style={[
+                        styles.strengthBarFill,
+                        {
+                          width: `${passwordValidation.score}%`,
+                          backgroundColor: strengthColor(passwordValidation.strength),
+                        },
+                      ]}
+                    />
+                  </View>
+                  <Text style={[styles.strengthLabel, { color: strengthColor(passwordValidation.strength) }]}>
+                    Senha {passwordValidation.strength}
+                  </Text>
+                  <View style={styles.rulesList}>
+                    {passwordValidation.rules.map((rule) => (
+                      <View key={rule.label} style={styles.ruleRow}>
+                        <Ionicons
+                          name={rule.met ? 'checkmark-circle' : 'ellipse-outline'}
+                          size={14}
+                          color={rule.met ? colors.success : colors.textSecondary}
+                        />
+                        <Text
+                          style={[
+                            styles.ruleText,
+                            { color: rule.met ? colors.success : colors.textSecondary },
+                          ]}
+                        >
+                          {rule.label}
+                        </Text>
+                      </View>
+                    ))}
+                  </View>
+                </View>
+              )}
+            </View>
 
             {apiError ? (
               <View style={[styles.apiErrorBox, { backgroundColor: colors.danger + '1A', borderColor: colors.danger }]}>
@@ -227,6 +226,28 @@ const styles = StyleSheet.create({
   title: { ...typography.h1, textAlign: 'center' },
   subtitle: { ...typography.body, textAlign: 'center' },
   form: { gap: spacing.md },
+  suggestionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    marginTop: spacing.xs,
+  },
+  suggestionText: { fontSize: 13, fontWeight: '500' },
+  strengthSection: { marginTop: spacing.sm, gap: spacing.xs },
+  strengthBarBg: {
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: '#E5E7EB',
+    overflow: 'hidden',
+  },
+  strengthBarFill: {
+    height: '100%',
+    borderRadius: 2,
+  },
+  strengthLabel: { fontSize: 12, fontWeight: '600' },
+  rulesList: { gap: 2 },
+  ruleRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
+  ruleText: { fontSize: 12 },
   apiErrorBox: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -239,39 +260,4 @@ const styles = StyleSheet.create({
   footer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center' },
   footerText: { ...typography.body },
   link: { ...typography.body, fontWeight: '600' },
-  // check-email stage
-  confirmContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: spacing.xl,
-    gap: spacing.lg,
-  },
-  iconCircle: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  confirmTitle: { ...typography.h1, textAlign: 'center' },
-  confirmBody: { ...typography.body, textAlign: 'center', lineHeight: 24 },
-  stepsCard: {
-    width: '100%',
-    borderRadius: radii.lg,
-    borderWidth: 1,
-    padding: spacing.md,
-    gap: spacing.sm,
-  },
-  stepRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  stepNum: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  stepNumText: { color: '#fff', fontWeight: '700', fontSize: 13 },
-  stepText: { ...typography.body, flex: 1 },
-  resend: { ...typography.body, textAlign: 'center' },
 });

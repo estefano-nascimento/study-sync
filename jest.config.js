@@ -11,6 +11,7 @@ module.exports = {
     '!**/*.d.ts',
     '!**/node_modules/**',
   ],
+  coverageDirectory: 'coverage',
   coverageReporters: ['lcov', 'text', 'text-summary'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
 };

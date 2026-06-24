@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/11</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/18</span>
+                <span class='fraction'>18/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/11</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -185,7 +185,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -193,12 +193,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -216,12 +216,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">48x</span>
+<span class="cline-any cline-yes">48x</span>
+<span class="cline-any cline-yes">48x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -260,7 +260,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -297,20 +297,20 @@ import { typography, spacing, radii } from '../lib/theme';
 &nbsp;
 type IoniconsName = React.ComponentProps&lt;typeof Ionicons&gt;['name'];
 &nbsp;
-const NAV_ITEMS: { label: string; icon: IoniconsName; activeIcon: IoniconsName; href: string }[] = <span class="cstat-no" title="statement not covered" >[</span>
+const NAV_ITEMS: { label: string; icon: IoniconsName; activeIcon: IoniconsName; href: string }[] = [
   { label: 'Início',        icon: 'home-outline',      activeIcon: 'home',        href: '/(app)/dashboard' },
   { label: 'Tarefas',       icon: 'clipboard-outline', activeIcon: 'clipboard',   href: '/(app)/tasks' },
   { label: 'Agenda',        icon: 'calendar-outline',  activeIcon: 'calendar',    href: '/(app)/calendar' },
   { label: 'Configurações', icon: 'settings-outline',  activeIcon: 'settings',    href: '/(app)/settings' },
 ];
 &nbsp;
-export function <span class="fstat-no" title="function not covered" >SidebarNav(</span>) {
-  const { colors } = <span class="cstat-no" title="statement not covered" >useThemeStore();</span>
-  const { unreadCount } = <span class="cstat-no" title="statement not covered" >useNotificationStore();</span>
-  const router = <span class="cstat-no" title="statement not covered" >useRouter();</span>
-  const pathname = <span class="cstat-no" title="statement not covered" >usePathname();</span>
+export function SidebarNav() {
+  const { colors } = useThemeStore();
+  const { unreadCount } = useNotificationStore();
+  const router = useRouter();
+  const pathname = usePathname();
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
+  return (
     &lt;ScrollView
       style={[styles.container, { backgroundColor: colors.surface }]}
       contentContainerStyle={styles.content}
@@ -327,13 +327,13 @@ export function <span class="fstat-no" title="function not covered" >SidebarNav(
 &nbsp;
       {/* Nav items */}
       &lt;View style={styles.nav}&gt;
-        {NAV_ITEMS.map(<span class="fstat-no" title="function not covered" >(i</span>tem) =&gt; {
-          const active = <span class="cstat-no" title="statement not covered" >pathname.startsWith(item.href.replace('/(app)', ''));</span>
-          const showBadge = <span class="cstat-no" title="statement not covered" >item.href.includes('settings') &amp;&amp; unreadCount &gt; 0;</span>
-<span class="cstat-no" title="statement not covered" >          return (</span>
+        {NAV_ITEMS.map((item) =&gt; {
+          const active = pathname.startsWith(item.href.replace('/(app)', ''));
+          const showBadge = item.href.includes('settings') &amp;&amp; unreadCount &gt; 0;
+          return (
             &lt;TouchableOpacity
               key={item.href}
-              onPress={<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >router.push(item.href as any)}</span>
+              onPress={() =&gt; router.push(item.href as any)}
               accessibilityLabel={item.label}
               accessibilityState={{ selected: active }}
               style={[
@@ -372,7 +372,7 @@ export function <span class="fstat-no" title="function not covered" >SidebarNav(
   );
 }
 &nbsp;
-const styles = <span class="cstat-no" title="statement not covered" >StyleSheet.create({</span>
+const styles = StyleSheet.create({
   container: { flex: 1 },
   content: { paddingVertical: spacing.lg, paddingHorizontal: spacing.sm, gap: spacing.sm },
   brandRow: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: spacing.sm },
@@ -406,7 +406,7 @@ const styles = <span class="cstat-no" title="statement not covered" >StyleSheet.
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-24T08:39:39.374Z
+                at 2026-06-24T09:10:32.343Z
             </div>
         <script src="../prettify.js"></script>
         <script>

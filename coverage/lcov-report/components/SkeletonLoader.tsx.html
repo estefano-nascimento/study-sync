@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>7/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -134,22 +134,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -157,10 +146,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -174,7 +172,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -192,12 +192,12 @@ interface Props {
   style?: ViewStyle;
 }
 &nbsp;
-export function <span class="fstat-no" title="function not covered" >Skeleton(</span>{ width = <span class="branch-0 cbranch-no" title="branch not covered" >'100%',</span> height = <span class="branch-0 cbranch-no" title="branch not covered" >16,</span> borderRadius = <span class="branch-0 cbranch-no" title="branch not covered" >8,</span> style }: Props) {
-  const { colors, isDark } = <span class="cstat-no" title="statement not covered" >useThemeStore();</span>
-  const anim = <span class="cstat-no" title="statement not covered" >useRef(new Animated.Value(0)).current;</span>
+export function Skeleton({ width = '100%', height = 16, borderRadius = 8, style }: Props) {
+  const { colors, isDark } = useThemeStore();
+  const anim = useRef(new Animated.Value(0)).current;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  useEffect(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    Animated.loop(</span>
+  useEffect(() =&gt; {
+    Animated.loop(
       Animated.sequence([
         Animated.timing(anim, { toValue: 1, duration: 800, useNativeDriver: true }),
         Animated.timing(anim, { toValue: 0, duration: 800, useNativeDriver: true }),
@@ -205,19 +205,19 @@ export function <span class="fstat-no" title="function not covered" >Skeleton(</
     ).start();
   }, [anim]);
 &nbsp;
-  const opacity = <span class="cstat-no" title="statement not covered" >anim.interpolate({ inputRange: [0, 1], outputRange: [0.4, 0.8] });</span>
-  const bg = <span class="cstat-no" title="statement not covered" >isDark ? '#334155' : '#E5E7EB';</span>
+  const opacity = anim.interpolate({ inputRange: [0, 1], outputRange: [0.4, 0.8] });
+  const bg = isDark ? '#334155' : '#E5E7EB';
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
+  return (
     &lt;Animated.View
       style={[{ width, height, borderRadius, backgroundColor: bg, opacity }, style]}
     /&gt;
   );
 }
 &nbsp;
-export function <span class="fstat-no" title="function not covered" >CardSkeleton(</span>) {
-  const { colors, isDark } = <span class="cstat-no" title="statement not covered" >useThemeStore();</span>
-<span class="cstat-no" title="statement not covered" >  return (</span>
+export function CardSkeleton() {
+  const { colors, isDark } = useThemeStore();
+  return (
     &lt;View
       style={[
         styles.card,
@@ -233,7 +233,7 @@ export function <span class="fstat-no" title="function not covered" >CardSkeleto
   );
 }
 &nbsp;
-const styles = <span class="cstat-no" title="statement not covered" >StyleSheet.create({</span>
+const styles = StyleSheet.create({
   card: {
     borderRadius: 16,
     padding: 16,
@@ -247,7 +247,7 @@ const styles = <span class="cstat-no" title="statement not covered" >StyleSheet.
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-24T08:39:39.374Z
+                at 2026-06-24T09:10:32.343Z
             </div>
         <script src="../prettify.js"></script>
         <script>

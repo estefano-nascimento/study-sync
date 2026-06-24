@@ -11,6 +11,9 @@ import {
 } from '../../lib/utils';
 import { Alert, Platform } from 'react-native';
 
+// Ensure Alert.alert is a jest mock
+jest.spyOn(Alert, 'alert').mockImplementation(jest.fn());
+
 describe('formatMinutes', () => {
   it('returns "0min" for 0 minutes', () => {
     expect(formatMinutes(0)).toBe('0min');

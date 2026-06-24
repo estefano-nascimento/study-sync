@@ -7,6 +7,7 @@ module.exports = {
     'lib/**/*.{ts,tsx}',
     'store/**/*.{ts,tsx}',
     'components/**/*.{ts,tsx}',
+    '!lib/types.ts',
     '!**/*.d.ts',
     '!**/node_modules/**',
   ],

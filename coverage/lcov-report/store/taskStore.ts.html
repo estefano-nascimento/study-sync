@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/13</span>
+                <span class='fraction'>13/13</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">87.5% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/8</span>
+                <span class='fraction'>7/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>7/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/11</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -126,38 +126,38 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -175,38 +175,38 @@ interface TaskState {
   updateTaskStatus: (taskId: string, status: Task['status']) =&gt; Promise&lt;void&gt;;
 }
 &nbsp;
-export const useTaskStore = <span class="cstat-no" title="statement not covered" >create&lt;TaskState&gt;(<span class="fstat-no" title="function not covered" >(s</span>et) =&gt; (<span class="cstat-no" title="statement not covered" >{</span></span>
+export const useTaskStore = create&lt;TaskState&gt;((set) =&gt; ({
   tasks: [],
   todayTasks: [],
   loading: false,
 &nbsp;
-  fetchTasks: <span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {
-<span class="cstat-no" title="statement not covered" >    set({ loading: true });</span>
-    const { data } = <span class="cstat-no" title="statement not covered" >await supabase</span>
+  fetchTasks: async () =&gt; {
+    set({ loading: true });
+    const { data } = await supabase
       .from('tasks')
       .select('*, subjects(name, color), task_progress(percentage)')
       .neq('status', 'done')
       .order('criticality_score', { ascending: false });
-<span class="cstat-no" title="statement not covered" >    set({ tasks: (data as Task[]) || [], loading: false });</span>
+    set({ tasks: (data as Task[]) || [], loading: false });
   },
 &nbsp;
-  fetchTodayTasks: <span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {
-    const now = <span class="cstat-no" title="statement not covered" >new Date();</span>
-    const { data } = <span class="cstat-no" title="statement not covered" >await supabase</span>
+  fetchTodayTasks: async () =&gt; {
+    const now = new Date();
+    const { data } = await supabase
       .from('tasks')
       .select('*, subjects(name, color), task_progress(percentage)')
       .gte('due_date', startOfDay(now).toISOString())
       .lte('due_date', endOfDay(now).toISOString())
       .neq('status', 'done')
       .order('criticality_score', { ascending: false });
-<span class="cstat-no" title="statement not covered" >    set({ todayTasks: (data as Task[]) || [] });</span>
+    set({ todayTasks: (data as Task[]) || [] });
   },
 &nbsp;
-  updateTaskStatus: <span class="fstat-no" title="function not covered" >as</span>ync (taskId, status) =&gt; {
-<span class="cstat-no" title="statement not covered" >    await supabase.from('tasks').update({ status }).eq('id', taskId);</span>
-<span class="cstat-no" title="statement not covered" >    set(<span class="fstat-no" title="function not covered" >(s</span>tate) =&gt; (<span class="cstat-no" title="statement not covered" >{</span></span>
-      tasks: state.tasks.map(<span class="fstat-no" title="function not covered" >(t</span>) =&gt; (<span class="cstat-no" title="statement not covered" >t.id === taskId ? { ...t, status } : t)</span>),
-      todayTasks: state.todayTasks.map(<span class="fstat-no" title="function not covered" >(t</span>) =&gt; (<span class="cstat-no" title="statement not covered" >t.id === taskId ? { ...t, status } : t)</span>),
+  updateTaskStatus: async (taskId, status) =&gt; {
+    await supabase.from('tasks').update({ status }).eq('id', taskId);
+    set((state) =&gt; ({
+      tasks: state.tasks.map((t) =&gt; (t.id === taskId ? { ...t, status } : t)),
+      todayTasks: state.todayTasks.map((t) =&gt; (t.id === taskId ? { ...t, status } : <span class="branch-1 cbranch-no" title="branch not covered" >t)</span>),
     }));
   },
 }));
@@ -217,7 +217,7 @@ export const useTaskStore = <span class="cstat-no" title="statement not covered"
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-24T08:39:39.374Z
+                at 2026-06-24T09:10:32.343Z
             </div>
         <script src="../prettify.js"></script>
         <script>

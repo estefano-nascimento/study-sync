@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/17</span>
+                <span class='fraction'>17/17</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/11</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/13</span>
+                <span class='fraction'>13/13</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -136,46 +136,46 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -195,46 +195,46 @@ interface NotificationState {
   addNotification: (n: Notification) =&gt; void;
 }
 &nbsp;
-export const useNotificationStore = <span class="cstat-no" title="statement not covered" >create&lt;NotificationState&gt;(<span class="fstat-no" title="function not covered" >(s</span>et, get) =&gt; (<span class="cstat-no" title="statement not covered" >{</span></span>
+export const useNotificationStore = create&lt;NotificationState&gt;((set, get) =&gt; ({
   notifications: [],
   unreadCount: 0,
   loading: false,
 &nbsp;
-  fetchNotifications: <span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {
-<span class="cstat-no" title="statement not covered" >    set({ loading: true });</span>
-    const { data } = <span class="cstat-no" title="statement not covered" >await supabase</span>
+  fetchNotifications: async () =&gt; {
+    set({ loading: true });
+    const { data } = await supabase
       .from('notifications')
       .select('*')
       .order('created_at', { ascending: false })
       .limit(50);
-    const notifs = <span class="cstat-no" title="statement not covered" >(data as Notification[]) || [];</span>
-<span class="cstat-no" title="statement not covered" >    set({</span>
+    const notifs = (data as Notification[]) || [];
+    set({
       notifications: notifs,
-      unreadCount: notifs.filter(<span class="fstat-no" title="function not covered" >(n</span>) =&gt; <span class="cstat-no" title="statement not covered" >!n.read)</span>.length,
+      unreadCount: notifs.filter((n) =&gt; !n.read).length,
       loading: false,
     });
   },
 &nbsp;
-  markRead: <span class="fstat-no" title="function not covered" >as</span>ync (id) =&gt; {
-<span class="cstat-no" title="statement not covered" >    await supabase.from('notifications').update({ read: true }).eq('id', id);</span>
-<span class="cstat-no" title="statement not covered" >    set(<span class="fstat-no" title="function not covered" >(s</span>tate) =&gt; (<span class="cstat-no" title="statement not covered" >{</span></span>
-      notifications: state.notifications.map(<span class="fstat-no" title="function not covered" >(n</span>) =&gt;
-<span class="cstat-no" title="statement not covered" >        n.id === id ? { ...n, read: true } : n</span>
+  markRead: async (id) =&gt; {
+    await supabase.from('notifications').update({ read: true }).eq('id', id);
+    set((state) =&gt; ({
+      notifications: state.notifications.map((n) =&gt;
+        n.id === id ? { ...n, read: true } : n
       ),
       unreadCount: Math.max(0, state.unreadCount - 1),
     }));
   },
 &nbsp;
-  markAllRead: <span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {
-<span class="cstat-no" title="statement not covered" >    await supabase.from('notifications').update({ read: true }).eq('read', false);</span>
-<span class="cstat-no" title="statement not covered" >    set(<span class="fstat-no" title="function not covered" >(s</span>tate) =&gt; (<span class="cstat-no" title="statement not covered" >{</span></span>
-      notifications: state.notifications.map(<span class="fstat-no" title="function not covered" >(n</span>) =&gt; (<span class="cstat-no" title="statement not covered" >{ ...n, read: true })</span>),
+  markAllRead: async () =&gt; {
+    await supabase.from('notifications').update({ read: true }).eq('read', false);
+    set((state) =&gt; ({
+      notifications: state.notifications.map((n) =&gt; ({ ...n, read: true })),
       unreadCount: 0,
     }));
   },
 &nbsp;
-  addNotification: <span class="fstat-no" title="function not covered" >(n</span>) =&gt; {
-<span class="cstat-no" title="statement not covered" >    set(<span class="fstat-no" title="function not covered" >(s</span>tate) =&gt; (<span class="cstat-no" title="statement not covered" >{</span></span>
+  addNotification: (n) =&gt; {
+    set((state) =&gt; ({
       notifications: [n, ...state.notifications],
       unreadCount: state.unreadCount + (n.read ? 0 : 1),
     }));
@@ -247,7 +247,7 @@ export const useNotificationStore = <span class="cstat-no" title="statement not 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-24T08:39:39.374Z
+                at 2026-06-24T09:10:32.343Z
             </div>
         <script src="../prettify.js"></script>
         <script>

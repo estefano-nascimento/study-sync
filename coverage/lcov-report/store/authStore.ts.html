@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/12</span>
+                <span class='fraction'>12/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/9</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -123,32 +123,32 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { create } from 'zustand';
@@ -167,32 +167,32 @@ interface AuthState {
   signOut: () =&gt; Promise&lt;void&gt;;
 }
 &nbsp;
-export const useAuthStore = <span class="cstat-no" title="statement not covered" >create&lt;AuthState&gt;(<span class="fstat-no" title="function not covered" >(s</span>et, get) =&gt; (<span class="cstat-no" title="statement not covered" >{</span></span>
+export const useAuthStore = create&lt;AuthState&gt;((set, get) =&gt; ({
   session: null,
   user: null,
   profile: null,
   loading: true,
 &nbsp;
-  setSession: <span class="fstat-no" title="function not covered" >(s</span>ession) =&gt; {
-<span class="cstat-no" title="statement not covered" >    set({ session, user: session?.user ?? null, loading: false });</span>
+  setSession: (session) =&gt; {
+    set({ session, user: session?.user ?? null, loading: false });
   },
 &nbsp;
-  setProfile: <span class="fstat-no" title="function not covered" >(p</span>rofile) =&gt; <span class="cstat-no" title="statement not covered" >set({ profile }),</span>
+  setProfile: (profile) =&gt; set({ profile }),
 &nbsp;
-  fetchProfile: <span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {
-    const { user } = <span class="cstat-no" title="statement not covered" >get();</span>
-<span class="cstat-no" title="statement not covered" >    if (!user) <span class="cstat-no" title="statement not covered" >return;</span></span>
-    const { data } = <span class="cstat-no" title="statement not covered" >await supabase</span>
+  fetchProfile: async () =&gt; {
+    const { user } = get();
+    if (!user) return;
+    const { data } = await supabase
       .from('user_profiles')
       .select('*')
       .eq('id', user.id)
       .single();
-<span class="cstat-no" title="statement not covered" >    if (data) <span class="cstat-no" title="statement not covered" >set({ profile: data as UserProfile });</span></span>
+    if (data) set({ profile: data as UserProfile });
   },
 &nbsp;
-  signOut: <span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {
-<span class="cstat-no" title="statement not covered" >    await supabase.auth.signOut();</span>
-<span class="cstat-no" title="statement not covered" >    set({ session: null, user: null, profile: null });</span>
+  signOut: async () =&gt; {
+    await supabase.auth.signOut();
+    set({ session: null, user: null, profile: null });
   },
 }));
 &nbsp;</pre></td></tr></table></pre>
@@ -202,7 +202,7 @@ export const useAuthStore = <span class="cstat-no" title="statement not covered"
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-24T08:39:39.374Z
+                at 2026-06-24T09:10:32.343Z
             </div>
         <script src="../prettify.js"></script>
         <script>

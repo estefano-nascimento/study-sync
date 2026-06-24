@@ -56,15 +56,42 @@ export default function GroupsScreen() {
 
     if (!data) { setLoading(false); return; }
 
-    const groupList: GroupWithMeta[] = (data as any[])
-      .filter((m) => m.groups)
-      .map((m) => ({
+    const filtered = (data as any[]).filter((m) => m.groups);
+
+    // Fetch actual member counts and task stats for each group
+    const groupIds = filtered.map((m) => m.groups.id);
+    const [membersRes, tasksRes] = await Promise.all([
+      supabase.from('group_members').select('group_id').in('group_id', groupIds),
+      supabase.from('tasks').select('group_id, status, priority').in('group_id', groupIds),
+    ]);
+
+    const memberCounts: Record<string, number> = {};
+    (membersRes.data || []).forEach((m: any) => {
+      memberCounts[m.group_id] = (memberCounts[m.group_id] || 0) + 1;
+    });
+
+    const taskStats: Record<string, { total: number; done: number; critical: number }> = {};
+    (tasksRes.data || []).forEach((t: any) => {
+      if (!taskStats[t.group_id]) taskStats[t.group_id] = { total: 0, done: 0, critical: 0 };
+      taskStats[t.group_id].total += 1;
+      if (t.status === 'done') taskStats[t.group_id].done += 1;
+      if (t.priority === 'critical' && t.status !== 'done') taskStats[t.group_id].critical += 1;
+    });
+
+    const groupList: GroupWithMeta[] = filtered.map((m) => {
+      const gid = m.groups.id;
+      const stats = taskStats[gid] || { total: 0, done: 0, critical: 0 };
+      const progress = stats.total > 0 ? Math.round((stats.done / stats.total) * 100) : 0;
+      const health: 'healthy' | 'warning' | 'critical' =
+        progress >= 80 ? 'healthy' : progress >= 50 ? 'warning' : 'critical';
+      return {
         ...m.groups,
-        memberCount: Math.floor(Math.random() * 8) + 2,
-        criticalCount: Math.floor(Math.random() * 4),
-        progress: Math.floor(Math.random() * 100),
-        health: (['healthy', 'warning', 'critical'] as const)[Math.floor(Math.random() * 3)],
-      }));
+        memberCount: memberCounts[gid] || 1,
+        criticalCount: stats.critical,
+        progress,
+        health,
+      };
+    });
     setGroups(groupList);
     setLoading(false);
   }, [user?.id]);

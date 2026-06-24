@@ -119,7 +119,22 @@ export default function HealthScreen() {
 
     const chartData = Object.entries(byDay).map(([x, y]) => ({ x, y }));
     setFocusData(chartData);
-    setCompletionData(chartData.slice(-7).map((d) => ({ ...d, y: Math.floor(Math.random() * 3) })));
+
+    // Build completion chart from actual task data: count done tasks per day (last 7 days)
+    const completionByDay: Record<string, number> = {};
+    for (let i = 6; i >= 0; i--) {
+      completionByDay[format(subDays(new Date(), i), 'dd/MM')] = 0;
+    }
+    const doneTasks = ((taskRes.data as Task[]) || []).filter((t) => t.status === 'done');
+    doneTasks.forEach((t) => {
+      // Use due_date if available, otherwise created_at, as a proxy for completion date
+      const dateStr = t.due_date || t.created_at;
+      if (dateStr) {
+        const day = format(new Date(dateStr), 'dd/MM');
+        if (day in completionByDay) completionByDay[day] += 1;
+      }
+    });
+    setCompletionData(Object.entries(completionByDay).map(([x, y]) => ({ x, y })));
     setLoading(false);
   }
 

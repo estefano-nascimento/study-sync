@@ -83,7 +83,7 @@ export default function NewTaskScreen() {
       return;
     }
     const estNum = estimatedMin ? parseInt(estimatedMin, 10) : null;
-    if (estimatedMin && (isNaN(estNum!) || estNum! <= 0)) {
+    if (estNum !== null && (isNaN(estNum) || estNum <= 0)) {
       crossAlert('Estimativa inválida', 'Informe um número inteiro positivo de minutos.');
       return;
     }

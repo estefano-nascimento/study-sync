@@ -112,7 +112,12 @@ export default function NewTaskScreen() {
       }
 
       if (data) {
-        try { await supabase.rpc('calculate_criticality', { task_id: data.id }); } catch {}
+        try {
+          await supabase.rpc('calculate_criticality', { task_id: data.id });
+        } catch (rpcError) {
+          // Criticality calculation is non-blocking; task is already saved
+          console.warn('Falha ao calcular criticidade:', rpcError);
+        }
       }
 
       await fetchTasks();
@@ -461,7 +466,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   priorityLabel: { fontSize: 13, fontWeight: '600', flex: 1 },
-  priorityCheck: { marginLeft: 'auto' as any },
+  priorityCheck: { marginLeft: 'auto' },
   dateTrigger: {
     flexDirection: 'row',
     alignItems: 'center',

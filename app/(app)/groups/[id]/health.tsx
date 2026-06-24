@@ -25,7 +25,10 @@ if (Platform.OS !== 'web') {
     VictoryBar = victory.VictoryBar;
     VictoryChart = victory.VictoryChart;
     VictoryAxis = victory.VictoryAxis;
-  } catch {}
+  } catch (e) {
+    // victory-native is optional and only available on native platforms
+    console.warn('victory-native not available:', e);
+  }
 }
 import { subDays, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';

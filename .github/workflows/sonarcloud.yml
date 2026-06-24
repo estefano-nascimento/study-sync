@@ -30,6 +30,15 @@ jobs:
       - name: Test and coverage
         run: npx jest --coverage
 
+      - name: Debug coverage report
+        run: |
+          echo "=== Coverage directory ==="
+          ls -la coverage/ || echo "coverage/ not found"
+          echo "=== lcov.info size ==="
+          wc -l coverage/lcov.info || echo "lcov.info not found"
+          echo "=== lcov.info first 30 lines ==="
+          head -30 coverage/lcov.info || echo "cannot read lcov.info"
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602 # v6.0.0
         env:

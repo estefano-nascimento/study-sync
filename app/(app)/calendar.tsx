@@ -171,8 +171,9 @@ export default function CalendarScreen() {
 
       setShowModal(false);
       await fetchEvents();
-    } catch (e: any) {
-      crossAlert('Erro inesperado', e?.message ?? 'Não foi possível criar o evento.');
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : 'Não foi possível criar o evento.';
+      crossAlert('Erro inesperado', message);
     } finally {
       setSaving(false);
     }

@@ -62,6 +62,8 @@ export default function NewTaskScreen() {
       setSubjects((subRes.data as Subject[]) || []);
       const grpList = ((grpRes.data || []) as any[]).map((m) => m.groups).filter(Boolean);
       setGroups(grpList as Group[]);
+    }).catch((err: unknown) => {
+      console.warn('Falha ao carregar disciplinas/grupos:', err);
     });
   }, [user?.id]);
 
@@ -122,8 +124,9 @@ export default function NewTaskScreen() {
 
       await fetchTasks();
       router.back();
-    } catch (e: any) {
-      crossAlert('Erro inesperado', e?.message ?? 'Não foi possível criar a tarefa.');
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : 'Não foi possível criar a tarefa.';
+      crossAlert('Erro inesperado', message);
     } finally {
       setSaving(false);
     }
